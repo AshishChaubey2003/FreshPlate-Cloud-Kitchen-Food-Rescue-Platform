@@ -1,0 +1,74 @@
+/* ===== LIGHT GREEN & WHITE THEME ===== */
+:root {
+    /* ===== PRIMARY COLORS - LIGHT GREEN ===== */
+    --primary: #4CAF50;
+    --primary-light: #66BB6A;
+    --primary-dark: #388E3C;
+    --primary-50: #E8F5E9;
+    --primary-100: #C8E6C9;
+    
+    /* ===== SECONDARY COLORS ===== */
+    --secondary: #FF9800;
+    --secondary-light: #FFB74D;
+    --secondary-dark: #F57C00;
+    
+    /* ===== ACCENT COLORS ===== */
+    --accent: #009688;
+    --accent-light: #26A69A;
+    --accent-dark: #00796B;
+    
+    /* ===== NEUTRAL COLORS ===== */
+    --white: #FFFFFF;
+    --light: #F8FDF8;
+    --gray-light: #F5F5F5;
+    --gray: #757575;
+    --gray-dark: #424242;
+    --dark: #2E2E2E;
+    
+    /* ===== SEMANTIC COLORS ===== */
+    --success: #4CAF50;
+    --warning: #FF9800;
+    --error: #F44336;
+    --info: #2196F3;
+    
+    /* ===== GRADIENTS ===== */
+    --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-light));
+    --gradient-light: linear-gradient(135deg, var(--primary-50), var(--white));
+    --gradient-hero: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    
+    /* ===== TYPOGRAPHY ===== */
+    --font-family: 'Poppins', sans-serif;
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    
+    /* ===== SPACING ===== */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    --spacing-2xl: 4rem;
+    
+    /* ===== BORDER RADIUS ===== */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    
+    /* ===== SHADOWS ===== */
+    --shadow-sm: 0 2px 8px rgba(76, 175, 80, 0.1);
+    --shadow-md: 0 4px 12px rgba(76, 175, 80, 0.15);
+    --shadow-lg: 0 8px 24px rgba(76, 175, 80, 0.2);
+    
+    /* ===== TRANSITIONS ===== */
+    --transition: all 0.3s ease;
+    
+    /* ===== HEADER ===== */
+    --header-height: 80px;
+    --header-bg: rgba(255, 255, 255, 0.98);
+}
