@@ -1,5 +1,6 @@
 // ===== FreshPlate v2.0 - Full Featured =====
-const API_BASE_URL = "https://freshplate-cloud-kitchen-food-rescue-2rv3.onrender.com/api";
+const API_BASE_URL =
+  "https://freshplate-cloud-kitchen-food-rescue-2rv3.onrender.com/api";
 
 // ===== TOKEN MANAGEMENT =====
 const Auth = {
@@ -177,7 +178,7 @@ document.addEventListener("DOMContentLoaded", function () {
     `,
   );
 
-  // ===== NAVBAR UPDATE (Login/Profile button add karo) =====
+  // ===== NAVBAR UPDATE =====
   function updateNavbar() {
     const navLinks = document.querySelector(".nav-links");
     const existingAuthBtn = document.getElementById("navAuthBtn");
@@ -202,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 🔑 Login
             </button>`;
     }
-    // Order Now button ke theek pehle insert karo
     const orderNowLi = navLinks?.querySelector(".order-now-btn")?.parentElement;
     if (orderNowLi) {
       navLinks.insertBefore(li, orderNowLi);
@@ -228,7 +228,6 @@ document.addEventListener("DOMContentLoaded", function () {
       showNotification("❌ Username aur password daalo!", "error");
       return;
     }
-
     try {
       const res = await fetch(`${API_BASE_URL}/auth/login/`, {
         method: "POST",
@@ -242,7 +241,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("authModal").style.display = "none";
         updateNavbar();
         showNotification(data.message || "Login ho gaya! 🎉");
-        // Prefill order form
         prefillOrderForm(data.user);
       } else {
         showNotification("❌ " + (data.error || "Login failed!"), "error");
@@ -423,7 +421,6 @@ document.addEventListener("DOMContentLoaded", function () {
           cart = [];
           updateCartCount();
           showNotification(`🎉 Order #${data.order.id} place ho gaya!`);
-          // Show tracking option
           setTimeout(() => {
             if (confirm(`Order #${data.order.id} track karna hai?`)) {
               openTracking(data.order.id);
@@ -536,31 +533,53 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ===== MENU LOAD =====
+  // ===== MENU LOAD (Retry logic with cold start support) =====
   async function loadMenuItems(category = "all") {
     const menuGrid = document.querySelector(".menu-grid");
     if (!menuGrid) return;
+
     menuGrid.innerHTML = `<div style="text-align:center; padding:40px; grid-column:1/-1">
+      <div class="spinner"></div>
+      <p style="margin-top:10px; color:var(--gray)">Menu load ho raha hai...<br>
+      <small style="color:#aaa;">(Pehli baar 30 sec lag sakte hain, backend jag raha hai)</small></p>
+    </div>`;
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        const url =
+          category === "all"
+            ? `${API_BASE_URL}/menu/`
+            : `${API_BASE_URL}/menu/?category=${category}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error("failed");
+        const data = await res.json();
+        const items = data.results || data;
+        if (!items.length) {
+          menuGrid.innerHTML =
+            '<p style="text-align:center; grid-column:1/-1; color:var(--gray)">Koi item nahi.</p>';
+          return;
+        }
+        renderMenuItems(items, menuGrid);
+        return; // success - bahar niklo
+      } catch {
+        if (attempt < 3) {
+          menuGrid.innerHTML = `<div style="text-align:center; padding:40px; grid-column:1/-1">
             <div class="spinner"></div>
-            <p style="margin-top:10px; color:var(--gray)">Menu load ho raha hai...</p></div>`;
-    try {
-      const url =
-        category === "all"
-          ? `${API_BASE_URL}/menu/`
-          : `${API_BASE_URL}/menu/?category=${category}`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("failed");
-      const data = await res.json();
-      const items = data.results || data;
-      if (!items.length) {
-        menuGrid.innerHTML =
-          '<p style="text-align:center; grid-column:1/-1; color:var(--gray)">Koi item nahi.</p>';
-        return;
+            <p style="color:var(--gray)">Backend se connect ho raha hai... (${attempt}/3)<br>
+            <small style="color:#aaa;">Thoda wait karo, almost ready hai...</small></p>
+          </div>`;
+          await new Promise((r) => setTimeout(r, 8000)); // 8 sec wait
+        } else {
+          menuGrid.innerHTML = `<p style="text-align:center; grid-column:1/-1; color:red; padding:40px;">
+            ⚠️ Backend connect nahi hua.<br><br>
+            <button onclick="loadMenuItems('${category}')"
+              style="padding:10px 24px; background:#4CAF50; color:white; border:none;
+              border-radius:8px; cursor:pointer; font-size:15px; font-weight:600;">
+              🔄 Dobara Try Karo
+            </button>
+          </p>`;
+        }
       }
-      renderMenuItems(items, menuGrid);
-    } catch {
-      menuGrid.innerHTML =
-        '<p style="text-align:center; grid-column:1/-1; color:red;">⚠️ Backend connect nahi hua.</p>';
     }
   }
 
@@ -738,7 +757,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ).observe(statsSection);
   }
 
-  // Add "Track Order" link to navbar - Order Now se pehle
+  // Track Order link navbar mein
   const navUl = document.querySelector(".nav-links");
   if (navUl) {
     const trackLi = document.createElement("li");
