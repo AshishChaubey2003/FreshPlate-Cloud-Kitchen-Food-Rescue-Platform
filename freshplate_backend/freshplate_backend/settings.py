@@ -76,7 +76,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ===== CORS Settings (Frontend se connect karne ke liye) =====
 CORS_ALLOWED_ORIGINS = [
-    "https://fresh-plate-cloud-kitchen-food-resc.vercel.app",
+    "https://fresh-plate-cloud-kitchen-food-rescue-platform-qxz5ov0m2.vercel.app",
 ]
 # Development ke liye, production me specific origins set karein
 
